@@ -1,0 +1,16 @@
+{
+  "confusion_matrix": [
+    [
+      429,
+      71
+    ],
+    [
+      2,
+      498
+    ]
+  ],
+  "labels": [
+    "food",
+    "non_food"
+  ]
+}

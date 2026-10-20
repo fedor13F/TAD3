@@ -8,8 +8,6 @@ __pycache__/
 /data/processed/
 /data/augmented/
 /models/
-/metrics/
-/plots/
 .dvc/cache/
 .dvc/tmp/
 .dvc/config.local

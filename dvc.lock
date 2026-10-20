@@ -78,7 +78,7 @@ stages:
           img_size: 224
           num_workers: 2
         model:
-          name: resnet18
+          name: mobilenet_v3_small
           num_classes: 2
           pretrained: true
         train:
@@ -87,23 +87,23 @@ stages:
           batch_size: 32
           weight_decay: 0.0001
           seed: 42
-          use_augmented: false
+          use_augmented: true
     outs:
     - path: metrics/train_metrics.json
       hash: md5
-      md5: b48eb063e5740f7eba86e7c45575e88b
-      size: 365
+      md5: 850186b7756372108dfcf5c123cecf54
+      size: 380
     - path: models/model.pkl
       hash: md5
-      md5: b92b0f4f33c2e0da83039223409319ff
-      size: 44780939
+      md5: c9acf0b5563b5dac513a79a9f82e9926
+      size: 6199523
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: models/model.pkl
       hash: md5
-      md5: b92b0f4f33c2e0da83039223409319ff
-      size: 44780939
+      md5: c9acf0b5563b5dac513a79a9f82e9926
+      size: 6199523
     - path: src/evaluate.py
       hash: md5
       md5: 0c0dd89bc19815262d27a93ce7c5268f
@@ -121,7 +121,7 @@ stages:
           img_size: 224
           num_workers: 2
         model:
-          name: resnet18
+          name: mobilenet_v3_small
           num_classes: 2
           pretrained: true
         train:
@@ -130,13 +130,13 @@ stages:
           batch_size: 32
           weight_decay: 0.0001
           seed: 42
-          use_augmented: false
+          use_augmented: true
     outs:
     - path: metrics.json
       hash: md5
-      md5: 3a1bf325817884ad59e70dd185b939ac
-      size: 153
+      md5: db764b20caef3d86a7603e1dec9b55c0
+      size: 163
     - path: plots/confusion_matrix.json
       hash: md5
-      md5: 643917eeb8319a33bab986309f5b8f12
-      size: 141
+      md5: de41d8db42991fddb7c2d0553e03e65d
+      size: 142

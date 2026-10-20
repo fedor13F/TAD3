@@ -1,0 +1,25 @@
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  augmented_dir: data/augmented
+  img_size: 224
+  num_workers: 2
+
+aug:
+  n_per_image: 2
+  rotate_deg: 15
+  color_jitter: 0.2
+  crop_scale: [0.8, 1.0]
+
+model:
+  name: resnet18
+  num_classes: 2
+  pretrained: true
+
+train:
+  lr: 0.001
+  epochs: 3
+  batch_size: 32
+  weight_decay: 0.0001
+  seed: 42
+  use_augmented: false

@@ -1,0 +1,59 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+      - src/prepare.py
+      - data/raw
+    params:
+      - data.img_size
+      - data.raw_dir
+      - data.processed_dir
+    outs:
+      - data/processed
+
+  augment:
+    cmd: python src/augment.py
+    deps:
+      - src/augment.py
+      - data/processed
+    params:
+      - data.augmented_dir
+      - aug
+      - train.seed
+    outs:
+      - data/augmented
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed
+      - data/augmented
+    params:
+      - data
+      - model
+      - train
+    outs:
+      - models/model.pkl
+    metrics:
+      - metrics/train_metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - src/train.py
+      - models/model.pkl
+    params:
+      - data
+      - model
+      - train
+    metrics:
+      - metrics.json:
+          cache: false
+    plots:
+      - plots/confusion_matrix.json:
+          cache: false
+          x: actual
+          y: predicted

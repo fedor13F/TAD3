@@ -1,0 +1,8 @@
+{
+  "accuracy": 0.927,
+  "precision": 0.875219683655536,
+  "recall": 0.996,
+  "f1": 0.9317118802619271,
+  "model": "resnet18",
+  "use_augmented": false
+}

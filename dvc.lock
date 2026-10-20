@@ -1,0 +1,142 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 840fdb9a23c98313dde45246036c291f.dir
+      size: 452697142
+      nfiles: 5000
+    - path: src/prepare.py
+      hash: md5
+      md5: 6bf265c7f44937a09401b3f88a03c45a
+      size: 1087
+    params:
+      params.yaml:
+        data.img_size: 224
+        data.processed_dir: data/processed
+        data.raw_dir: data/raw
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: fc308da27397194ed791c53f270b2f8d.dir
+      size: 86703990
+      nfiles: 5000
+  augment:
+    cmd: python src/augment.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: fc308da27397194ed791c53f270b2f8d.dir
+      size: 86703990
+      nfiles: 5000
+    - path: src/augment.py
+      hash: md5
+      md5: c8cc4886be62235e73c4486087ec23b2
+      size: 1882
+    params:
+      params.yaml:
+        aug:
+          n_per_image: 2
+          rotate_deg: 15
+          color_jitter: 0.2
+          crop_scale:
+          - 0.8
+          - 1.0
+        data.augmented_dir: data/augmented
+        train.seed: 42
+    outs:
+    - path: data/augmented
+      hash: md5
+      md5: d5fa49dd3504adc3f1177c106329203a.dir
+      size: 126330906
+      nfiles: 11000
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/augmented
+      hash: md5
+      md5: d5fa49dd3504adc3f1177c106329203a.dir
+      size: 126330906
+      nfiles: 11000
+    - path: data/processed
+      hash: md5
+      md5: fc308da27397194ed791c53f270b2f8d.dir
+      size: 86703990
+      nfiles: 5000
+    - path: src/train.py
+      hash: md5
+      md5: 369d96e0f2a23200717df3ff3376d045
+      size: 5124
+    params:
+      params.yaml:
+        data:
+          raw_dir: data/raw
+          processed_dir: data/processed
+          augmented_dir: data/augmented
+          img_size: 224
+          num_workers: 2
+        model:
+          name: resnet18
+          num_classes: 2
+          pretrained: true
+        train:
+          lr: 0.001
+          epochs: 3
+          batch_size: 32
+          weight_decay: 0.0001
+          seed: 42
+          use_augmented: false
+    outs:
+    - path: metrics/train_metrics.json
+      hash: md5
+      md5: b48eb063e5740f7eba86e7c45575e88b
+      size: 365
+    - path: models/model.pkl
+      hash: md5
+      md5: b92b0f4f33c2e0da83039223409319ff
+      size: 44780939
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: b92b0f4f33c2e0da83039223409319ff
+      size: 44780939
+    - path: src/evaluate.py
+      hash: md5
+      md5: 0c0dd89bc19815262d27a93ce7c5268f
+      size: 3978
+    - path: src/train.py
+      hash: md5
+      md5: 369d96e0f2a23200717df3ff3376d045
+      size: 5124
+    params:
+      params.yaml:
+        data:
+          raw_dir: data/raw
+          processed_dir: data/processed
+          augmented_dir: data/augmented
+          img_size: 224
+          num_workers: 2
+        model:
+          name: resnet18
+          num_classes: 2
+          pretrained: true
+        train:
+          lr: 0.001
+          epochs: 3
+          batch_size: 32
+          weight_decay: 0.0001
+          seed: 42
+          use_augmented: false
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 3a1bf325817884ad59e70dd185b939ac
+      size: 153
+    - path: plots/confusion_matrix.json
+      hash: md5
+      md5: 643917eeb8319a33bab986309f5b8f12
+      size: 141
